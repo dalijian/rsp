@@ -11,6 +11,7 @@ import java.util.Map;
 public class Cart {
 	
 	/**
+	 * 购物车包含购物项，总价
 	 * 购物车的属性:
 	 * 购物车总价
 	 */
@@ -56,9 +57,11 @@ public class Cart {
 	
 	// 清空购物车:
 	public void clearCart(){
+		
 		// 清空map集合:
 		map.clear();
 		// 设置总金额为0:
 		total = 0d;
+		
 	}
 }

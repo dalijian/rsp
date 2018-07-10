@@ -17,29 +17,64 @@
     </script>
     <script>
         $(function () {
+            //初始化页面 从 后台  session获取  cart  要判断 cart 是否为空 ，为空时 ，显示cart 为空
             $.get("/myweb/CartServlet?method=getCart",function (data) {
-                $.each(data.map,function (index,content) {
-                    var count = content.count;
-                    alert(count);
+                var cartprice =data.total;
+                if (cartprice==="0" || cartprice===0) {
+                    $(".setion").empty();
+                    var $empty = $(`<h1>购物车为空</h1>`);
+                    $empty.insertAfter(".category");
+                }else {
+                    $("#cartprice").text(cartprice);
+                    alert("总价钱-->" + cartprice);
+                    $.each(data.map, function (key, value) {
+                        alert(key);
+                        var pid = value.product.pid;
+                        var pimage = value.product.pimage;
+                        var pname = value.product.pname;
+                        var shop_price = value.product.shop_price;
+                        var number = value.count;
+                        var totalPrice = number * shop_price;
+                        var $cartitem = $(`<tr>
 
+                            <td><img src="${pimage}" alt=""></td>
+                            <td>${pname}</td>
+                            <td>${shop_price}</td>
+                            <td>${number}</td>
+                            <td>${totalPrice}</td>
+                            <td><a href="#" pid=${pid}>删除</a></td></tr>`);
+                        $cartitem.appendTo("#tbody");
+
+                    });
+                }
                 },'json');
-            //     var $cartitem =$(`<td><img src="${pimage}" alt=""><tr></td>
-            // <td>${pname}</td>
-            // <td>${shop_price}</td>
-            // <td>${number}</td>
-            // <td>${totalPrice}</td>
-            // <td><a href="#">删除</a></td></tr>`) ;
+                //删除购物项  , 购物项 删除 后 总金额要发生变化， 解决方法
+                // 1. 页面刷新 location.reload(true); 页面刷新 不合适
+                // 2. ajax  修改 总金额    页面不会刷新，但在ajax 异步加载 需要时间等待
+                // 3. 修改 总金额  删除购物项后，后台金额已经改变，只是页面没变
+            $("body").on("click", "tbody a", (function () {
+                var pid = $(this).attr("pid");
+                $(this).parent().parent().remove();
+                alert(pid);
+                $.get("/myweb/CartServlet?method=removeCart",{
+                    pid:pid,
+                },function (data){
+                    alert(data);
+                  // 拿到this的price有点困难， 解决方法
+                  //   1. 拿到this节点的 price 节点，在text（）拿到值
+                  //   2. 创建javaScript对象，通过javaScript对象拿到对应的属性  怎么写？？？
+                });
 
+            }));
 
+            //清空购物车
+            $("#emptyCart").click(function () {
+                $.get("/myweb/CartServlet?method=clearCart", function (data) {
+                    alert(data);
+                    location.reload(true);  //清空后刷新页面
+                },"json");
+                return false;
             });
-
-            // var $cartitem =$(`<td><img src="${pimage}" alt=""><tr></td>
-            // <td>${pname}</td>
-            // <td>${shop_price}</td>
-            // <td>${number}</td>
-            // <td>${totalPrice}</td>
-            // <td><a href="#">删除</a></td></tr>`) ;
-
         });
 
 
@@ -57,8 +92,18 @@
 
 <div class="setion">
 
-    <table class="table-bordered">
-        <caption>购物车</caption>
+    <table class="table-bordered table">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <div class="page-header">
+                        <h1>
+                            <!--页标题-->
+                            <span id="pageTitle"> 购物车</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
         <thead>
         <tr>
             <th>图片</th>
@@ -69,10 +114,19 @@
             <th>操作</th>
         </tr>
         </thead>
-        <tbody>
-
+        <tbody id="tbody">
         </tbody>
+        </div>
     </table>
+    <div class="col-lg-offset-8 col-lg-2">
+        <span>总价格￥<strong id="cartprice"></strong></span>
+    </div>
+    <div class="row">
+    <div class="col-lg-offset-8 col-lg-4">
+        <span id="emptyCart"><a href="">清空购物车</a></span>
+        <span id="submitOrder"><a href="order.html">提交订单</a></span>
+    </div>
+    </div>
 </div>
 <div class="footer"></div>
 </body>

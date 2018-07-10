@@ -47,13 +47,14 @@ public class CartServlet extends BaseServlet {
 	 * @param req
 	 * @return
 	 */
-	public String clearCart(HttpServletRequest req,HttpServletResponse resp){
-		try{
+	public String clearCart(HttpServletRequest req,HttpServletResponse response){
+		try{response.setContentType("html/text;charset=utf-8");
 			// 调用Cart中的clearCart的方法:
 			Cart cart = getCart(req);
 			cart.clearCart(); //清除购物车中的 购物项 集合
 			// 页面跳转：
-			resp.sendRedirect(req.getContextPath()+"/jsp/cart.jsp");
+			response.getWriter().append(new Gson().toJson("清空购物车成功"));
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -65,15 +66,16 @@ public class CartServlet extends BaseServlet {
 	 * @param req
 	 * @return
 	 */
-	public String removeCart(HttpServletRequest req,HttpServletResponse resp){
-		try{
+	public String removeCart(HttpServletRequest request,HttpServletResponse response){
+		try{response.setContentType("html/text;charset=utf-8");
 			// 接收参数:
-			String pid = req.getParameter("pid");
+			String pid = request.getParameter("pid");
 			// 调用Cart中的clearCart的方法:
-			Cart cart = getCart(req);
+			Cart cart = getCart(request);
 			cart.removeCart(pid);
 			// 页面跳转：
-			resp.sendRedirect(req.getContextPath()+"/jsp/cart.jsp");
+			String json = new Gson().toJson("删除成功");
+			response.getWriter().append(json);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
