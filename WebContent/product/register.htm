@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head></head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会员登录</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+
+<script src="../jquery/jquery-2.1.0.min.js"></script>
+<script src="../javaScript/jquery.validate.js"></script>
+<script src="../javaScript/bootstrap.min.js"></script>
+<script src="../javaScript/messages_zh.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+<!-- 引入自定义css文件 style.css -->
+<link rel="stylesheet" href="css/style.css" type="text/css"/>
+<script>
+    $().ready(function () {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("#registryForm").validate({
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 6,
+                },
+                //confirm_password 的name 和id 必须为 confirm_password
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                confirm_password: {
+                    equalTo: "#password"
+                },
+                telephone: {
+                    required: true,
+                    minlength: 11,
+                    maxlength: 11,
+                    digits: true
+                },
+                date: {
+                    dateISO: true
+                },
+                name: {
+                    minlength: 6,
+                    required: true
+                },
+                email: {
+                    email: true
+                }
+            },
+            messages: {
+
+                username: {
+                    required: "请输入用户名",
+                    minlength: "用户名不小于6个字母组成"
+                },
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于 6 个字母"
+                },
+                confirm_password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于 6 个字母",
+                    equalTo: "两次密码输入不一致"
+                },
+
+                email: "请输入一个正确的邮箱",
+            }
+        });
+        //验证用户名是否存在
+        $("#username").blur(function () {
+            $.get("/myweb/UserServlet?method=checkUsername", {
+                username: $("#username").val()
+            }, function (data) {
+                var result = data;
+                if (!isEmpty(result)) {
+                    alert(data);
+                    $("#checkName").text(result);
+                }
+            });
+        });
+    });
+
+    function isEmpty(obj) {
+        if (typeof obj == "undefined" || obj == null || obj == "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+</script>
+
+<style>
+    body {
+        margin-top: 20px;
+        margin: 0 auto;
+    }
+
+    .carousel-inner .item img {
+        width: 100%;
+        height: 300px;
+    }
+
+    .container .row div {
+        /* position:relative;
+        float:left; */
+    }
+
+    font {
+        color: #3164af;
+        font-size: 18px;
+        font-weight: normal;
+        padding: 0 10px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+<script>
+    $(function () {
+        $(".foot").load("foot.html");
+        $(".category").load("category.html");
+
+    });
+</script>
+</head>
+<body>
+
+
+<!--
+    时间：2015-12-30
+    描述：菜单栏
+-->
+<div class="container-fluid">
+    <div class="col-md-4">
+        <img src="img/logo2.png"/>
+    </div>
+    <div class="col-md-5">
+        <img src="img/header.png"/>
+    </div>
+    <div class="col-md-3" style="padding-top:20px">
+        <ol class="list-inline">
+            <li><a href="login.jsp">登录</a></li>
+            <li><a href="register.htm">注册</a></li>
+            <li><a href="cart.htm">购物车</a></li>
+        </ol>
+    </div>
+</div>
+<!--
+    时间：2015-12-30
+    描述：导航条
+-->
+<div class="category"></div>
+
+
+<div class="container" style="width:100%;background:url('image/regist_bg.jpg');">
+    <div class="row">
+
+        <div class="col-md-2"></div>
+
+
+        <div class="col-md-8" style="background:#fff;padding:40px 80px;margin:30px;border:7px solid #ccc;">
+            <span>会员注册</span>
+            <form class="form-horizontal" style="margin-top:5px;" action="/shopping/UserServlet?method=registry"
+                  method="post" id="registryForm">
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">用户名</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
+                    </div>
+                    <div class="col-sm-2" id="checkName"> </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">密码</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password" class="col-sm-2 control-label">确认密码</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                               placeholder="请输入确认密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入姓名">
+                    </div>
+                </div>
+                <div class="form-group opt">
+                    <label class="col-sm-2 control-label">性别</label>
+                    <div class="col-sm-6">
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" value="男" checked> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="sex" id="inlineRadio2" value="女"> 女
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="telephone" class="col-sm-2 control-label">电话</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="telephone" class="form-control" name="telephone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="date" class="col-sm-2 control-label">出生日期</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="date" class="form-control" name="date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="checkNumber" class="col-sm-2 control-label">验证码</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="checkNumber">
+
+                    </div>
+                    <div class="col-sm-2">
+                        <img src="./image/captcha.jhtml"/>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" width="100" value="注册" name="submit" border="0"
+                               style="background: url('./images/register.gif') no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+				    height:35px;width:100px;color:white;">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-2"></div>
+
+    </div>
+</div>
+
+
+<div class="foot"> </div>
+
+</body>
+</html>
+
+

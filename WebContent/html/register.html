@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>register</title>
+	<script src="../jquery/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+	<h1>register</h1>
+	<form action="/myweb/register" method="
+	post">
+	<label for="username">username</label>
+		<input type="text" name="username" id="username"><br>
+		<label for="password">password</label>
+		<input type="password" name="password" id="password"><br>
+		<label for="passwordTwice">再次输入密码</label>
+		<input type="password" name="passwordTwice" id="passwordTwice"><br>
+		<button type="submit">register</button>
+	</form>
+	<script>
+	$(function(){
+
+		alert("wellcome");
+	})
+	$('button').click(function(){
+		if($('#password').val()===$('#passwordTwice').val()){
+			return true;
+			}else{
+				alert("两次密码不一致");
+				}
+				);
+				</script>
+</body>
+</html>

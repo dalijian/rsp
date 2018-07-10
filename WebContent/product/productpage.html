@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../jquery/jquery-2.1.0.min.js"> </script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $(".footer").load("foot.html");
+            $(".category").load("category.html");
+            $(".menu").load("menu.html");
+        });
+    </script>
+    <script>
+        $(function () {
+            $("title").text(getUrlParam("cname"));//修改 title
+            $("#pageTitle").text(getUrlParam("cname"))//修改页标题
+            page(getUrlParam("cid"),"1");
+        });
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return decodeURI(r[2]); return null; //返回参数值
+        }
+
+        //page函数异步获得数据
+        function page(cid,currentPage) {
+            $.get("/myweb/ProductServlet?method=findPageAll", {
+                cid: cid,                       //请求参数，不用放在url后面
+                currentPage: currentPage
+            }, function (data) {
+                $.each(data.list, function (index, content) {
+                    var pimage = content.pimage;
+                    var pname = content.pname.substring(0,25);
+                    var shop_price = content.shop_price;
+                    var market_price= content.market_price;
+                    var pid = content.pid;
+                    var pdesc = content.pdesc;
+                    var $pageElement = $(`<div class="col-lg-3">
+        <a href="product_info.html?pid=${pid}&pname=${pname}&pimage=${pimage}&shop_price=${shop_price}&market_price=${market_price}&pdesc=${pdesc}"><img src="${pimage}" alt="telephone"></a>
+    <p class="text-center pname"><a  href="product_info.html?pid=${pid}&pname=${pname}&pimage=${pimage}&shop_price=${shop_price}&market_price=${market_price}&pdesc=${pdesc}">${pname}</a></p>
+    <p class="text-center price">${shop_price}</p>
+    </div>`);
+                    $pageElement.appendTo("div.product");
+                });
+
+                $("   <li class=\"upPage\"><a href=\"#\">上一页</a></li>\n" +
+                    "            <li class=\"downPage\"><a href=\"#\">下一页</a></li>").appendTo(".pagination");
+                for (let i = 1; i < data.totalPage+1; i++) {
+                    var $page= $(` <li><a href="#">${i}</a></li>`);
+                    $page.insertBefore(".downPage");
+                }
+                },"json");
+        };
+        //点击页面查询
+        $(function () {
+            $("body").on("click",'.pagination a',(function () {//动态dom 使用事务绑定
+
+                var toPage = $(this).text();
+
+
+                $(".pagination").children().remove();
+                $(".product").children().remove();
+                page(getUrlParam("cid"),toPage);
+                $(this).parent().addClass("active");
+                $(this).addClass("active");
+                return false;
+            }));
+
+        });
+    </script>
+    <style>
+        .product img{
+            width: 130px;
+            height: 130px;
+            text-align: center;
+        }
+        .price{
+            color: red;
+
+        }
+        .pname{
+            color: olive;
+        }
+        ul.pagination{
+            list-style: outside none none;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+
+        }
+        .pagination li{
+            display: inline-block;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            height: 30px;
+
+
+        }
+        .pagination li>a{
+            width: 60px;
+            /*border: 1px solid red;*/
+            display:inline-block;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 19px;
+            text-decoration: pink;
+            line-height: 30px;
+        }
+    </style>
+
+<title> </title>
+</head>
+<body>
+<!--显示用户登录状态-->
+<div class="menu"></div>
+
+<!--商品分类-->
+<div class="category"></div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    <!--页标题-->
+                    <span id="pageTitle"></span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <!--商品记录-->
+    <div class="row product"></div>
+    <hr>
+
+    <div class="row">
+        <ul class="pagination">
+        </ul>
+    </div>
+<div class="footer"></div>
+</div>
+</body>
+</html>

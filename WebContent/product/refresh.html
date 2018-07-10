@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Refresh" content="5;url=/day09/demo3/index.html">
+<title>Insert title here</title>
+<script type="text/javascript">
+	
+	window.onload = function(){
+		window.setInterval("changeSeconds()", 1000);
+	}
+	var i = 5;
+	function changeSeconds(){
+		i--;
+		// 获得span元素:
+		document.getElementById("s1").innerHTML = i;
+	}
+</script>
+</head>
+<body>
+<h1>HTML登录成功！页面将会在<span id="s1">5</span>秒后跳转！！</h1>
+</body>
+</html>

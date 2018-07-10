@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户登录</title>
+    <!--<%&#45;&#45;表单验证&#45;&#45;%>-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="/myweb/product/js/jquery-2.1.0.min.js"></script>
+    <script src="/myweb/product/js/jquery.validate.js"></script>
+    <script src="/myweb/product/js/bootstrap.min.js"></script>
+    <script src="/myweb/product/js/messages_zh.js"></script>
+    <style>
+        body {
+            margin-top: 20px;
+            margin: 0 auto;
+        }
+        .carousel-inner .item img {
+            width: 100%;
+            height: 300px;
+        }
+        .container .row div {
+            /* position:relative;
+            float:left; */
+        }
+        font {
+            color: #666;
+            font-size: 22px;
+            font-weight: normal;
+            padding-right: 17px;
+        }
+
+        #img1:hover {
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script>
+        //验证码
+        function changeImg() {
+            document.getElementById("img1").src = "/myweb/CheckImgServlet?time=" + new Date().getTime();
+        }
+        $(function () {
+            // 检查用户名是否存在，密码是否正确，用户是否激活
+            // $("#submit").click(function() {
+            //     login();
+            //     });
+
+            $("#loginForm").submit(function () {
+                login();
+                return false;
+        });
+        });
+        //ajax 登录函数
+        function login(){
+            $.get("/myweb/UserServlet?method=login",{
+                username: $("#username").val(),
+                password:$("#password").val(),
+                autoLogin:$("#autoLogin").val(),
+                rememberUsername:$("#rememberUsername").val()
+            }, function (data) {
+                var result = data;
+                alert(data);
+                $("#checkName").text(result);
+                if(data==="登录成功"){
+                    flag = true;
+                    location.assign("index.html");//登录成功后跳转首页，登录失败留在本页
+                }else {
+                    flag = false;
+                };
+                // alert(location.toString());
+            },'json');
+        }
+        //表单验证
+        $().ready(function () {
+            $("#loginForm").validate();
+        });
+        //检查String是否为空
+        function isEmpty(obj){
+            if(typeof obj == "undefined" || obj == null || obj == ""){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        // $(function () {
+        //     $("#loginCookie").click(function () {
+        //         $.get("/myweb/UserServlet?method=loginCookie", {
+        //             username:"zhangsan",
+        //             password:"123456"}
+        //             ,function (data) {
+        //                 alert(data);
+        //         },"json");
+        //     });
+        // });
+    </script>
+    <script>
+        $(function () {
+            $(".category").load("/myweb/product/category.html");
+            $(".footer").load("/myweb/product/foot.html");
+            $(".menu").load("/myweb/product/menu.html");
+        });
+    </script>
+</head>
+<body>
+<div id="hidden">
+    <h1></h1>
+</div>
+
+<!--//判断登录-->
+<div class="menu"></div>
+
+
+<!--<%&#45;&#45;商品菜单导航&#45;&#45;%>-->
+<div class="category"></div>
+
+
+<div class="container" style="width:100%;height:460px;background:#FF2C4C url('images/loginbg.jpg') no-repeat;">
+    <div class="row">
+        <div class="col-lg-offset-7 col-lg-4">
+
+        <div class="col-md-5">
+            <div style="width:440px;border:1px solid #E7E7E7;padding:20px 0 20px 30px;border-radius:5px;margin-top:60px;background:#fff;">
+                <span>会员登录</span>
+                <div id="checkName" style="color:red">&nbsp;</div>
+                <form class="form-horizontal" action="/myweb/product/index.html" method="post" id="loginForm">
+
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control text" id="username" name="username"
+                                   placeholder="请输入用户名" minlength="6">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control password" id="password" name="password"
+                                   placeholder="请输入密码" minlength="6">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">验证码</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control " id="validatenum" name="code" placeholder="请输入验证码">
+                        </div>
+                        <div class="col-sm-3">
+                            <img id="img1" src="/myweb/CheckImgServlet"
+                                 onclick="changeImg()"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="autoLogin" id="autoLogin"> 自动登录
+                                </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="checkbox" name="rememberUsername" id="rememberUsername"> 记住用户名
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <input type="submit" width="100" value="登录" name="submit" border="0" id="submit"
+                                   style="background: url('./images/login.gif') no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height:35px;width:100px;color:white;">
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<%&#45;&#45;footer尾部层&#45;&#45;%>-->
+<div class="footer"></div>
+</body>
+</html>

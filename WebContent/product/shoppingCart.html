@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>购物车</title>
+
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script>
+        $(function () {
+            $(".footer").load("foot.html");
+            $(".menu").load("menu.html");
+            $(".category").load("category.html");
+        });
+    </script>
+    <script>
+        $(function () {
+            $.get("/myweb/CartServlet?method=getCart",function (data) {
+                $.each(data.map,function (index,content) {
+                    var count = content.count;
+                    alert(count);
+
+                },'json');
+            //     var $cartitem =$(`<td><img src="${pimage}" alt=""><tr></td>
+            // <td>${pname}</td>
+            // <td>${shop_price}</td>
+            // <td>${number}</td>
+            // <td>${totalPrice}</td>
+            // <td><a href="#">删除</a></td></tr>`) ;
+
+
+            });
+
+            // var $cartitem =$(`<td><img src="${pimage}" alt=""><tr></td>
+            // <td>${pname}</td>
+            // <td>${shop_price}</td>
+            // <td>${number}</td>
+            // <td>${totalPrice}</td>
+            // <td><a href="#">删除</a></td></tr>`) ;
+
+        });
+
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return decodeURI(r[2]); return null; //返回参数值
+        }
+    </script>
+</head>
+<body>
+<div class="menu"></div>
+<div class="category"></div>
+
+<div class="setion">
+
+    <table class="table-bordered">
+        <caption>购物车</caption>
+        <thead>
+        <tr>
+            <th>图片</th>
+            <th>商品</th>
+            <th>价格</th>
+            <th>数量</th>
+            <th>小计</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+<div class="footer"></div>
+</body>
+</html>

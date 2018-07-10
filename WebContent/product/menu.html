@@ -1,0 +1,58 @@
+
+<!--使用ajax判断是否登录-->
+<script>
+    $(function () {
+        $.get("/myweb/UserServlet?method=checkLogin",function (data) {
+            if (data === null) {
+           var $loginFail= $(` <li><a href="/myweb/product/login.html">登录</a></li>
+            <li><a href="/myweb/product/register.htm">注册</a></li>`);
+           $loginFail.prependTo(".login");
+            }else{
+                alert(data);
+                var data = data.split("#")[0];
+                var  $loginSuccess=$(`<li><span>hello  ${data}</span></li>
+            <li><a  id="quit" href="index.html">退出</a></li>`);
+                $loginSuccess.prependTo(".login");
+            }
+
+        },"json");
+
+        $("body").on("click","li>#quit",(
+            function () {
+                $.get("/myweb/UserServlet?method=quit", function (data) {
+                    alert(data);
+                },"json");
+        }));
+
+    });
+</script>
+<div class="container-fluid">
+    <div class="col-md-4">
+        <img src="/myweb/product/img/logo2.png" />
+    </div>
+    <div class="col-md-5">
+        <img src="/myweb/product/img/header.png" />
+    </div>
+    <div class="col-md-3" style="padding-top:20px">
+        <ol class="list-inline login">
+            <!--<%&#45;&#45;<c:if text="${sessionScope.get('existLogin')==null}">&#45;&#45;%>-->
+            <!--<%&#45;&#45;<li><a href="/myweb/product/login.jsp">登录</a></li>&#45;&#45;%>-->
+            <!--<%&#45;&#45;</c:if>&#45;&#45;%>-->
+            <!--<%&#45;&#45;<c:if text="${sessionScope.get('existLogin')!=null}">&#45;&#45;%>-->
+            <!--<%&#45;&#45;<li><span>hello ${sessionScope.get("existLogin")}</span></li>&#45;&#45;%>-->
+            <!--<%&#45;&#45;</c:if>&#45;&#45;%>-->
+
+            <!--<% if(request.getSession().getAttribute("existLogin")==null){-->
+            <!--%>-->
+            <!--<li><a href="/myweb/product/login.jsp">登录</a></li>-->
+            <!--<li><a href="/myweb/product/register.htm">注册</a></li>-->
+            <!--<% }else{-->
+            <!--%>-->
+            <!--<li><span>hello ${sessionScope.get("existLogin").split("#")[0]}</span></li>-->
+            <!--<li><a href="${pageContext.request.contextPath}/quit">退出</a></li>-->
+            <!--<% }-->
+            <!--%>-->
+            <li><a href="shoppingCart.jsp">购物车</a></li>
+        </ol>
+    </div>
+</div>
